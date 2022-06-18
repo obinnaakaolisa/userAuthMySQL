@@ -27,8 +27,12 @@
 <div class="container justify-content-center">
      <h1 class="">
        Welcome to Zuri Authentication 
-       <?php session_start();
-        if(isset($_SESSION)){ echo $_SESSION['username'];} ?>
+       <?php
+        if (session_status() === PHP_SESSION_NONE) {
+          session_start();
+          if (isset($_SESSION['username'])) echo $_SESSION['username'];
+        }
+        ?>
     </h1>
 
      <form action="php/action.php" method="GET">

@@ -1,6 +1,5 @@
 <?php
 
-
 function db() {
     //set your configs here
     $host = "127.0.0.1";

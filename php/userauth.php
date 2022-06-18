@@ -7,6 +7,24 @@ function registerUser($fullnames, $email, $password, $gender, $country){
     //create a connection variable using the db function in config.php
     $conn = db();
    //check if user with this email already exist in the database
+   $checkUserQuery = "SELECT email FROM students WHERE email = '$email'";
+   $checkUser = $conn->query($checkUserQuery);
+   if($checkUser){
+       if($checkUser->num_rows == 0){
+        $addUserQuery = "INSERT INTO students(full_names, country, email, gender, password) VALUES('$fullnames', '$country', '$email', '$gender', '$password')";
+        $addUser = $conn->query($addUserQuery);
+        if($addUser){
+            echo "<script> alert('User registered successfully!') </script>";
+            echo '<meta http-equiv="refresh" content="2;url=../forms/login.html"/>';
+        } else{
+         echo "<script> alert('Error. User not registered!') </script>";
+         echo '<meta http-equiv="refresh" content="2;url=../forms/register.html"/>';
+        }
+       } else {
+       echo "<script> alert('User already registered!')</script>";
+       echo '<meta http-equiv="refresh" content="2;url=../forms/login.html"/>';
+       }
+   }
 }
 
 
@@ -19,6 +37,27 @@ function loginUser($email, $password){
     //open connection to the database and check if username exist in the database
     //if it does, check if the password is the same with what is given
     //if true then set user session for the user and redirect to the dasbboard
+    $getUserQuery = "SELECT * FROM students WHERE email = '$email'";
+    $getUser = $conn->query($getUserQuery);
+    if($getUser){
+        if($getUser->num_rows > 0){
+            $user = $getUser->fetch_assoc();
+            $db_email = $user['email'];
+            $db_password = $user['password'];
+
+            if($email == $db_email && $password == $db_password){
+                $_SESSION['username'] = $email;
+                echo "<script> alert('Login successful!')</script>";
+                echo '<meta http-equiv="refresh" content="2;url=../dashboard.php"/>';
+            }else {
+                echo "<script> alert('Invalid credentials supplied!')</script>";
+                echo '<meta http-equiv="refresh" content="2;url=../forms/login.html"/>';
+            }
+        } else {
+            echo "<script> alert('User does not exist. Please register!')</script>";
+            echo '<meta http-equiv="refresh" content="2;url=../forms/register.html"/>';
+        }
+    }
 }
 
 
@@ -28,6 +67,24 @@ function resetPassword($email, $password){
     echo "<h1 style='color: red'>RESET YOUR PASSWORD (IMPLEMENT ME)</h1>";
     //open connection to the database and check if username exist in the database
     //if it does, replace the password with $password given
+    $getUserQuery = "SELECT email FROM students WHERE email = '$email'";
+    $getUser = $conn->query($getUserQuery);
+    if($getUser){
+        if($getUser->num_rows > 0){
+           $resetPasswordQuery = "UPDATE students SET password = '$password' WHERE email = '$email'";
+           $resetPassword = $conn->query($resetPasswordQuery);
+            if($resetPassword){                                
+                echo "<script> alert('Password reset successful!')</script>";
+                echo '<meta http-equiv="refresh" content="2;url=../forms/login.html"/>';
+            }else {
+                echo "<script> alert('Error! Password not reset')</script>";
+                echo '<meta http-equiv="refresh" content="2;url=../forms/resetpassword.html"/>';
+            }
+        } else {
+            echo "<script> alert('User does not exist!')</script>";
+            echo '<meta http-equiv="refresh" content="2;url=../forms/register.html"/>';
+        }
+    }
 }
 
 function getusers(){
