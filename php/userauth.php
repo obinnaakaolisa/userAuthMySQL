@@ -119,7 +119,13 @@ function getusers(){
     //loop through the users and display them on a table
 }
 
- function deleteaccount($id){
+ function deleteAccount($id){
      $conn = db();
      //delete user with the given id from the database
+     $sql = "DELETE FROM Students WHERE `id` = $id";
+     $result = mysqli_query($conn, $sql);
+     if($result){
+        echo "<script> alert('User deleted succesfuly!')</script>";
+        echo '<meta http-equiv="refresh" content="2;url=../dashboard.php"/>';
+     }else echo "<script> alert('Error deleting user!')</script>";
  }
