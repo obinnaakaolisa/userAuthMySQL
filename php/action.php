@@ -1,6 +1,6 @@
 <?php
 
-if(session_status() === PHP_SESSION_NONE) session_start();
+session_status() === PHP_SESSION_NONE ? session_start() : null;
 include "userauth.php";
 include_once "../config.php";
 

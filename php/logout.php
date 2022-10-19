@@ -12,6 +12,8 @@ function logout(){
     if(isset($_SESSION['username'])) {
         unset($_SESSION['username']);
         session_destroy();
-        header("Location:../forms/login/html");
-    } else echo "Not logged in"; header("Location:../forms/login.html");
+        header("Location:../forms/login.html");
+    } else {
+        echo "Not logged in"; header("Location:../forms/login.html");
+    }
 }

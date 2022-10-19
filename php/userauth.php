@@ -6,23 +6,29 @@ require_once "../config.php";
 function registerUser($fullnames, $email, $password, $gender, $country){
     //create a connection variable using the db function in config.php
     $conn = db();
-   //check if user with this email already exist in the database
+    
+    //check if user with this email already exist in the database
    $checkUserQuery = "SELECT email FROM students WHERE email = '$email'";
    $checkUser = $conn->query($checkUserQuery);
+
    if($checkUser){
+
        if($checkUser->num_rows == 0){
+
         $addUserQuery = "INSERT INTO students(full_names, country, email, gender, password) VALUES('$fullnames', '$country', '$email', '$gender', '$password')";
         $addUser = $conn->query($addUserQuery);
-        if($addUser){
-            echo "<script> alert('User registered successfully!') </script>";
-            echo '<meta http-equiv="refresh" content="2;url=../forms/login.html"/>';
-        } else{
-         echo "<script> alert('Error. User not registered!') </script>";
-         echo '<meta http-equiv="refresh" content="2;url=../forms/register.html"/>';
-        }
+
+            if($addUser){
+                echo "<script> alert('User registered successfully!') </script>";
+                echo '<meta http-equiv="refresh" content="2;url=../forms/login.html"/>';
+            } else {
+                echo "<script> alert('Error. User not registered!') </script>";
+                echo '<meta http-equiv="refresh" content="2;url=../forms/register.html"/>';
+            }
+
        } else {
-       echo "<script> alert('User already registered!')</script>";
-       echo '<meta http-equiv="refresh" content="2;url=../forms/login.html"/>';
+            echo "<script> alert('User already registered!')</script>";
+            echo '<meta http-equiv="refresh" content="2;url=../forms/login.html"/>';
        }
    }
 }
@@ -34,11 +40,13 @@ function loginUser($email, $password){
     $conn = db();
 
     echo "<h1 style='color: red'> LOG ME IN (IMPLEMENT ME) </h1>";
+
     //open connection to the database and check if username exist in the database
     //if it does, check if the password is the same with what is given
     //if true then set user session for the user and redirect to the dasbboard
     $getUserQuery = "SELECT * FROM students WHERE email = '$email'";
     $getUser = $conn->query($getUserQuery);
+
     if($getUser){
         if($getUser->num_rows > 0){
             $user = $getUser->fetch_assoc();
@@ -64,11 +72,14 @@ function loginUser($email, $password){
 function resetPassword($email, $password){
     //create a connection variable using the db function in config.php
     $conn = db();
+
     echo "<h1 style='color: red'>RESET YOUR PASSWORD (IMPLEMENT ME)</h1>";
+
     //open connection to the database and check if username exist in the database
     //if it does, replace the password with $password given
     $getUserQuery = "SELECT email FROM students WHERE email = '$email'";
     $getUser = $conn->query($getUserQuery);
+    
     if($getUser){
         if($getUser->num_rows > 0){
            $resetPasswordQuery = "UPDATE students SET password = '$password' WHERE email = '$email'";
@@ -113,7 +124,10 @@ function getusers(){
                 "<td style='width: 150px'> <button type='submit', name='delete'> DELETE </button>".
                 "</tr>";
         }
-        echo "</table></table></center></body></html>";
+        echo "
+        </table></table>
+        <button type='button' onclick='window.history.back();'>Go back</button>
+        </center></body></html>";
     }
     //return users from the database
     //loop through the users and display them on a table
@@ -127,5 +141,7 @@ function getusers(){
      if($result){
         echo "<script> alert('User deleted succesfuly!')</script>";
         echo '<meta http-equiv="refresh" content="2;url=../dashboard.php"/>';
-     }else echo "<script> alert('Error deleting user!')</script>";
+     } else {
+        echo "<script> alert('Error deleting user!')</script>";
+     }
  }
